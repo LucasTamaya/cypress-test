@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe("Todos", () => {
   beforeEach(() => {
     cy.visit("/");
@@ -8,69 +10,57 @@ describe("Todos", () => {
     }).click();
   });
 
-  it("should add a todo", () => {
-    // get the input element and type some value
+  it("should be able to add, check and remove some todos", () => {
     cy.findByRole("textbox", {
       name: /title/i,
-    }).type("First todo");
+    })
+      .type("Todo 1")
+      .type("{enter}");
 
-    // click on submit button
+    cy.findByRole("textbox", {
+      name: /title/i,
+    }).type("Todo 2");
+
     cy.findByRole("button", {
       name: /submit/i,
     }).click();
 
-    // test that the todo is added to the document
-    cy.findByText(/first todo/i).should("exist");
+    // tests if todos has been added
+    cy.findByText(/todo 1/i).should("exist");
+    cy.findByText(/todo 2/i).should("exist");
 
-    // test that a single remove button is added to the document
-    cy.findByRole("button", {
-      name: /remove/i,
-    })
-      .should("exist")
-      .and("have.length", 1);
+    // test if Total Todos has been updated
+    cy.findByText(/total todos: 2/i).should("exist");
 
-    // test that the Total Todos has been updated to 1
-    cy.findByText(/total todos: 1/i).should("exist");
-  });
-
-  it("should remove a todo", () => {
-    cy.findByRole("textbox", {
-      name: /title/i,
-    })
-      .type("First todo")
-      .type("{enter}");
-
-    cy.findByRole("button", {
-      name: /remove/i,
+    cy.findByRole("checkbox", {
+      name: /todo 2/i,
     }).click();
 
-    // test that the todo has been removed from the document
-    cy.findByText(/first todo/i).should("not.exist");
-  });
+    // test if we can check a todo
+    cy.findByRole("checkbox", {
+      name: /todo 2/i,
+    }).should("be.checked");
 
-  it("should remove the second todo", () => {
-    cy.findByRole("textbox", {
-      name: /title/i,
-    })
-      .type("First todo")
-      .type("{enter}");
+    // test if selected todos has been updated when whe check a todo
+    cy.findByText(/selected todos: 1/i).should("exist");
 
-    // add the second todo
-    cy.findByRole("textbox", {
-      name: /title/i,
-    })
-      .type("Second todo")
-      .type("{enter}");
+    // test if the checked todo is cross out
+    cy.findByText(/todo 2/i).should("have.class", "line-through");
 
-    // when we add a todo, we wait 500ms, so we must make sur cypress is also waiting
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
+    cy.findByRole("checkbox", {
+      name: /todo 2/i,
+    }).click();
 
-    // click on the remove button of the second todo
-    cy.get('[data-cy="todo-Second todo"] > button').click();
-    // cy.findByTest()
+    // test if we can uncheck a todo
+    cy.findByRole("checkbox", {
+      name: /todo 2/i,
+    }).should("not.be.checked");
 
-    // test that the todo has been removed from the document
-    cy.findByText(/second todo/i).should("not.exist");
+    cy.findByText(/selected todos: 0/i).should("exist");
+
+    // test if we can remove a todo
+    cy.get('[data-cy="todo-Todo 1"] > button').click();
+    cy.findByText(/todo 1/i).should("not.exist");
+    cy.findByText(/total todos: 1/i).should("exist");
   });
 });

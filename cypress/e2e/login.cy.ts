@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe("Login", () => {
   // go on the page where that we want to test
   beforeEach(() => {
