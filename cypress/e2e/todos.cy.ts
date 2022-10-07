@@ -1,14 +1,14 @@
 describe("Todos", () => {
   beforeEach(() => {
     cy.visit("/");
-  });
 
-  it("should add a todo", () => {
     // login
     cy.findByRole("button", {
       name: /click here to login/i,
     }).click();
+  });
 
+  it("should add a todo", () => {
     // get the input element and type some value
     cy.findByRole("textbox", {
       name: /title/i,
@@ -31,5 +31,46 @@ describe("Todos", () => {
 
     // test that the Total Todos has been updated to 1
     cy.findByText(/total todos: 1/i).should("exist");
+  });
+
+  it("should remove a todo", () => {
+    cy.findByRole("textbox", {
+      name: /title/i,
+    })
+      .type("First todo")
+      .type("{enter}");
+
+    cy.findByRole("button", {
+      name: /remove/i,
+    }).click();
+
+    // test that the todo has been removed from the document
+    cy.findByText(/first todo/i).should("not.exist");
+  });
+
+  it("should remove the second todo", () => {
+    cy.findByRole("textbox", {
+      name: /title/i,
+    })
+      .type("First todo")
+      .type("{enter}");
+
+    // add the second todo
+    cy.findByRole("textbox", {
+      name: /title/i,
+    })
+      .type("Second todo")
+      .type("{enter}");
+
+    // when we add a todo, we wait 500ms, so we must make sur cypress is also waiting
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000);
+
+    // click on the remove button of the second todo
+    cy.get('[data-cy="todo-Second todo"] > button').click();
+    // cy.findByTest()
+
+    // test that the todo has been removed from the document
+    cy.findByText(/second todo/i).should("not.exist");
   });
 });
