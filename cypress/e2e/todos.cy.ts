@@ -2,12 +2,7 @@
 
 describe("Todos", () => {
   beforeEach(() => {
-    cy.visit("/");
-
-    // login
-    cy.findByRole("button", {
-      name: /click here to login/i,
-    }).click();
+    cy.login();
   });
 
   it("should be able to add, check and remove some todos", () => {
