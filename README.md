@@ -1,17 +1,21 @@
-# React Starter Template
+# Cypress Test
 
+Simple Todo App project to learn the basics of end to end testing with Cypress
 
-
-## Technologies
-
-- React
-- TypeScript
-- Tailwind CSS
-- ESLint 
-- Prettier
-
-## How to use it
-
+## To run the app
 ```
-git clone https://github.com/LucasTamaya/react-starter-template.git
+npm run start
+```
+or
+```
+yarn start
+```
+
+## To run tests
+```
+npm run cypress 
+```
+or
+```
+yarn cypress 
 ```
